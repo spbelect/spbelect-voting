@@ -2,6 +2,8 @@
 
 import random
 import string
+import hashlib
+import datetime
 
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
@@ -53,8 +55,11 @@ def answer(request, id=None):
         key = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(6))
         reply = Reply.objects.create(key=key, question_id=id)
 
+        rd_key = hashlib.sha1(str(datetime.datetime.now()) + key).hexdigest()
+
         for answer_id in form.cleaned_data['answers']:
             ReplyData.objects.create(
+                key=rd_key,
                 reply=reply,
                 answer_id=answer_id
             )

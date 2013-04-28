@@ -39,11 +39,12 @@ class UserReply(models.Model):
         db_table = 'polling_user_reply'
 
 class Reply(models.Model):
-    key = models.TextField()
+    key = models.TextField(primary_key=True)
     question = models.ForeignKey(Question, db_column='question_id')
 
 class ReplyData(models.Model):
-    reply = models.ForeignKey(Reply, db_column='reply_id')
+    key = models.TextField(primary_key=True)
+    reply = models.ForeignKey(Reply, db_column='reply_key')
     answer = models.ForeignKey(Answer, db_column='answer_id', null=True)
 
     class Meta:
