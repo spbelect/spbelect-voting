@@ -425,3 +425,12 @@ ul.log li:hover {
   width: 285px;
   margin-left: 20px;
 }
+
+table.replies {
+  border-collapse: collapse;
+}
+
+table.replies td, table.replies th {
+  border: 1px solid black;
+  padding: 3px;
+}
