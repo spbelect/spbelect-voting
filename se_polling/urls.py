@@ -32,6 +32,7 @@ urlpatterns += patterns('polling.views',
     (r'^question-list/$', 'question_list'),
     (r'^question/(?P<id>\d+)$', 'question'),
     (r'^answer/(?P<id>\d+)$', 'answer'),
+    (r'^voters/$', 'voters'),
 )
 
 if settings.DEBUG:

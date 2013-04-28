@@ -1,0 +1,19 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="wrapper">
+
+<b>Проголосовавшие:</b>
+
+<ul>
+{% for voter in voters %}
+
+<li>{{ voter.first_name }} {{ voter.last_name }}</li>
+
+{% empty %}
+Нет
+{% endfor %}
+</ul>
+
+</div>
+{% endblock content %}

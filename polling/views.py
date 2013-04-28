@@ -5,11 +5,12 @@ import string
 import hashlib
 import datetime
 
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.views.decorators.http import require_POST
 from django.template.response import TemplateResponse
 from django.db import transaction
 from django.shortcuts import redirect
+from django.contrib.auth.models import User
 
 from models import *
 from forms import AnswerForm
@@ -68,3 +69,10 @@ def answer(request, id=None):
         success = False
 
     return TemplateResponse(request, 'answer.html', locals())
+
+@login_required()
+@user_passes_test(lambda user: user.is_staff, '/')
+def voters(request):
+    voters = User.objects.filter(user_replies__isnull=False)
+
+    return TemplateResponse(request, 'voters.html', locals())
