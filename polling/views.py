@@ -55,9 +55,8 @@ def answer(request, id=None):
         key = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(6))
         reply = Reply.objects.create(key=key, question_id=id)
 
-        rd_key = hashlib.sha1(str(datetime.datetime.now()) + key).hexdigest()
-
         for answer_id in form.cleaned_data['answers']:
+            rd_key = hashlib.sha1(str(datetime.datetime.now()) + key).hexdigest()
             ReplyData.objects.create(
                 key=rd_key,
                 reply=reply,
