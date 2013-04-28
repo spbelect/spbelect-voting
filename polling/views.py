@@ -17,7 +17,7 @@ from models import *
 from forms import AnswerForm
 
 def index(request):
-    return redirect('polling.views.replies')
+    return TemplateResponse(request, 'index.html', locals())
 
 @login_required()
 def question_list(request):
@@ -73,6 +73,7 @@ def answer(request, id=None):
 
 @login_required()
 def voters(request):
+    title = u'Список проголосовавших'
     voters = User.objects.filter(user_replies__isnull=False).order_by('first_name', 'last_name')
 
     members = User.objects.count()
