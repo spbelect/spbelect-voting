@@ -75,4 +75,6 @@ def answer(request, id=None):
 def voters(request):
     voters = User.objects.filter(user_replies__isnull=False).order_by('first_name', 'last_name')
 
+    presence = float(len(voters))/User.objects.count() * 100
+
     return TemplateResponse(request, 'voters.html', locals())
