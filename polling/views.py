@@ -73,6 +73,6 @@ def answer(request, id=None):
 @login_required()
 @user_passes_test(lambda user: user.is_staff, '/')
 def voters(request):
-    voters = User.objects.filter(user_replies__isnull=False)
+    voters = User.objects.filter(user_replies__isnull=False).order_by('first_name', 'last_name')
 
     return TemplateResponse(request, 'voters.html', locals())
