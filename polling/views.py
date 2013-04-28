@@ -11,12 +11,13 @@ from django.template.response import TemplateResponse
 from django.db import transaction
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
+from django.db.models import Count
 
 from models import *
 from forms import AnswerForm
 
 def index(request):
-    return redirect('polling.views.question_list')
+    return redirect('polling.views.replies')
 
 @login_required()
 def question_list(request):
@@ -80,3 +81,14 @@ def voters(request):
     presence = float(len(voters))/members * 100
 
     return TemplateResponse(request, 'voters.html', locals())
+
+@login_required()
+def replies(request):
+    title = u'Итоги голосования за кандидатов в совет Наблюдателей Петербурга'
+    answers = Answer.objects.order_by('title').annotate(replies=Count('reply_data'))
+
+    ordered_answers = Answer.objects.annotate(replies=Count('reply_data')).order_by('-replies')
+
+    replies = Reply.objects.prefetch_related('reply_data').order_by('key')
+
+    return TemplateResponse(request, 'replies.html', locals())

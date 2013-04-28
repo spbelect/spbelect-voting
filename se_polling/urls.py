@@ -29,10 +29,11 @@ urlpatterns += patterns('account.views',
 
 urlpatterns += patterns('polling.views',
     (r'^index/$|^$', 'index'),
-    (r'^question-list/$', 'question_list'),
-    (r'^question/(?P<id>\d+)$', 'question'),
-    (r'^answer/(?P<id>\d+)$', 'answer'),
+    #(r'^question-list/$', 'question_list'),
+    #(r'^question/(?P<id>\d+)$', 'question'),
+    #(r'^answer/(?P<id>\d+)$', 'answer'),
     (r'^voters/$', 'voters'),
+    (r'^replies/$', 'replies'),
 )
 
 if settings.DEBUG:

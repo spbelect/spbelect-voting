@@ -44,8 +44,8 @@ class Reply(models.Model):
 
 class ReplyData(models.Model):
     key = models.TextField(primary_key=True)
-    reply = models.ForeignKey(Reply, db_column='reply_key')
-    answer = models.ForeignKey(Answer, db_column='answer_id', null=True)
+    reply = models.ForeignKey(Reply, related_name='reply_data', db_column='reply_key')
+    answer = models.ForeignKey(Answer, related_name='reply_data', db_column='answer_id', null=True)
 
     class Meta:
         db_table = 'polling_reply_data'

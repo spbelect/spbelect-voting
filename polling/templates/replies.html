@@ -1,0 +1,63 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div style="margin-bottom: 70px; margin-top: 20px; margin-left: 10px;">
+<table class="replies">
+  <tr>
+    <th colspan="12">Бюллетени</th>
+  </tr>
+  <tr>
+    <th>Код</th>
+    {% for answer in answers %}
+    <th>{{ answer.title.split|join:"<br />"|safe }}</th>
+    {% endfor %}
+  </tr>
+  {% for reply in replies %}
+  <tr>
+    <td>{{ reply.key }}</td>
+    {% for answer in answers %}
+    <td>
+      {% for reply_data in reply.reply_data.all %}
+        {% if reply_data.answer_id == answer.id %}x{% endif %}
+      {% endfor %}
+    </td>
+    {% endfor %}
+  </tr>
+  {% if forloop.counter|divisibleby:"10" %}
+  <tr>
+    <th>Код</th>
+    {% for answer in answers %}
+    <th>{{ answer.title.split|join:"<br />"|safe }}</th>
+    {% endfor %}
+  </tr>
+  {% endif %}
+  {% endfor %}
+  <tr>
+    <th>{{ replies|length }}</th>
+    {% for answer in answers %}
+    <th>{{ answer.replies }}</th>
+    {% endfor %}
+  </tr>
+</table>
+
+<br /><br />
+
+<table class="replies">
+  <tr>
+    <th colspan="2">Итиговый протокол</th>
+  </tr>
+  <tr>
+    <th>Кандидат</th>
+    <th>Голоса</th>
+  </tr>
+
+  {% for answer in ordered_answers %}
+  <tr {% if forloop.counter <= 7 %}style="color:red;"{% endif %}>
+    <td>{{ answer.title }}</td>
+    <td>{{ answer.replies }}</td>
+  </tr>
+  {% endfor %}
+</table>
+
+</div>
+{% endblock content %}
