@@ -1,0 +1,17 @@
+{% extends "admin/base.html" %}
+{% load i18n %}
+
+{% block extrastyle %}
+{{ super.extrastyle }}
+<link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}/css/admin_style.css" />
+{% endblock %}
+
+{% block title %}{{ title }} | Административный интерфейс{% endblock %}
+
+{% block branding %}
+<div class="head-logo"></div>
+<div id="site-name">IP-PBX</div>
+<div class="page-title">Административный интерфейс</div>
+{% endblock %}
+
+{% block nav-global %}{% endblock %}

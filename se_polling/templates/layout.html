@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ru" lang="ru">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta http-equiv="content-style-type" content="text/css" />
+    {% block head_links %}
+    <link rel="stylesheet" href="{{ STATIC_URL }}se_polling/css/jquery-ui/jquery-ui-1.9.2.custom.min.css"
+      type="text/css" media="screen" />
+    <link href="{{ STATIC_URL }}se_polling/css/style.css" media="screen" rel="stylesheet" type="text/css" />
+    <link href="{{ STATIC_URL }}se_polling/css/ui.jqgrid.css" media="screen" rel="stylesheet" type="text/css" />
+    <link href="{{ STATIC_URL }}se_polling/images/shortcut-np.png" rel="shortcut icon" />
+    {% endblock %}
+    {% block head_scripts %}
+    <script type="text/javascript" src="{{ STATIC_URL }}se_polling/js/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}se_polling/js/jquery-csrf.min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}se_polling/js/jquery-ui-1.9.2.custom.min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}se_polling/js/jquery.ui.datepicker-ru.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}se_polling/js/grid.locale-ru.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}se_polling/js/jquery.jqGrid.min.js"></script>
+
+    <script type="text/javascript">
+      $.ajaxSetup({
+        traditional: true,
+        error: function(xhr) {
+          if (xhr.status == 401) {
+            window.location.assign('/');
+          }
+        },
+      });
+    </script>
+    {% endblock %}
+    <title>
+      {% if title %}
+        {{ title }} •
+      {% endif %}
+      Конференция Наблюдателей Петербурга
+    </title>
+  </head>
+  <body>
+    <div class="content">
+      <div class="head">
+        {% if user.is_authenticated %}
+        <a href="" class="logo"></a>
+        <div class="title"><a href="">Конференция Наблюдателей Петербурга</a></div>
+        <div class="page-title">{{ title }}</div>
+        <ul class="menu">
+          <li><a href="{% url account.views.change_password %}">Изменение пароля</a></li>
+          <li><a href="{% url account.views.logout %}">
+            Выход
+            {% if user.first_name or user.last_name %}
+            ({{ user.first_name }} {{ user.last_name }})
+            {% endif %}
+          </a></li>
+        </ul>
+        {% endif %}
+      </div>
+
+      {% block content %}{% endblock %}
+
+    </div>
+    <div class="foot"><div>
+    {% if user.is_authenticated %}
+      ОО «Наблюдатели Петербурга»
+      {% if user.is_staff %}
+        <a href="/admin" class="admin-link">административный интерфейс</a>
+      {% endif %}
+    {% endif %}
+    </div></div>
+  </body>
+</html>

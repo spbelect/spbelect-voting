@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ru" lang="ru">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta http-equiv="content-style-type" content="text/css" />
+    <link rel="stylesheet" href="{{ STATIC_URL }}se_polling/css/jquery-ui/jquery-ui-1.9.2.custom.min.css"
+      type="text/css" media="screen" />
+    <link href="{{ STATIC_URL }}se_polling/css/style.css" media="screen" rel="stylesheet" type="text/css" />
+    <link href="{{ STATIC_URL }}se_polling/css/ui.jqgrid.css" media="screen" rel="stylesheet" type="text/css" />
+
+    <script type="text/javascript" src="{{ STATIC_URL }}se_polling/js/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}se_polling/js/jquery-csrf.min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}se_polling/js/jquery-ui-1.9.2.custom.min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}se_polling/js/jquery.ui.datepicker-ru.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function() {
+        $('input[type="submit"]').button();
+        $('input[name="username"]').focus();
+      });
+    </script>
+    <title>Вход в систему</title>
+  </head>
+  <body>
+    <div class="content">
+      <div class="wrapper">
+        <div class="login-box">
+          <div class="label">Вход в систему</div>
+            <div class="login-error-block">{{ error_message }}</div>
+            <form action="{% url account.views.login %}" method="post" class="form">
+            <div>
+              {{ login_form.username }}
+              {{ login_form.username.label_tag }}
+            </div>
+            <div>
+              {{ login_form.password }}
+              {{ login_form.password.label_tag }}
+            </div>
+            <hr />
+            <div>
+              <input type="submit" name="submit" value="Войти" />
+            </div>
+            {{ login_form.next }}
+            {% csrf_token %}
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

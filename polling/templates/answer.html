@@ -1,0 +1,28 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="wrapper">
+
+{% if success %}
+Вы успешно проголосовали. Вы сможете просмотреть свой бюллетень по этому ключу:
+
+<br /><br />
+
+<font size="24pt"><b>{{ key }}</b></font>
+
+<br /><br />
+
+Запишите его!
+
+<br /><br />
+
+<a href="/question-list/">К списку вопросов</a>
+
+{% else %}
+
+Произошла ошибка! Свяжитесь со счетной комиссией!
+
+{% endif %}
+
+</div>
+{% endblock content %}
