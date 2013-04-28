@@ -72,7 +72,6 @@ def answer(request, id=None):
     return TemplateResponse(request, 'answer.html', locals())
 
 @login_required()
-@user_passes_test(lambda user: user.is_staff, '/')
 def voters(request):
     voters = User.objects.filter(user_replies__isnull=False).order_by('first_name', 'last_name')
 
