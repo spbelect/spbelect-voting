@@ -35,7 +35,7 @@
 <div class="wrapper">
   <b>{{ question.title }}</b><br /><br />
 
-  {{ question.text }}<br /><br />
+  {{ question.text|safe }}<br /><br />
 
   {% if question.type_id == 1 %}
     Выберите один вариант
