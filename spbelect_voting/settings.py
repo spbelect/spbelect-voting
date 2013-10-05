@@ -1,4 +1,4 @@
-# Django settings for se_polling project.
+# Django settings for spbelect_voting project.
 
 import os
 
@@ -51,7 +51,7 @@ STATIC_URL = '/static/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
-    ('se_polling', os.path.join(PROJECT_DIR, 'static')),
+    ('spbelect_voting', os.path.join(PROJECT_DIR, 'static')),
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -82,10 +82,10 @@ MIDDLEWARE_CLASSES = (
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'se_polling.urls'
+ROOT_URLCONF = 'spbelect_voting.urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
-WSGI_APPLICATION = 'se_polling.wsgi.application'
+WSGI_APPLICATION = 'spbelect_voting.wsgi.application'
 
 TEMPLATE_DIRS = (
     os.path.join(PROJECT_DIR, 'templates'),
@@ -106,7 +106,7 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
     'account',
-    'polling',
+    'voting',
 )
 
 # A sample logging configuration. The only tangible logging

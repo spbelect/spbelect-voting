@@ -9,7 +9,7 @@
   <li><a href="/question/{{ question.id }}">{{ question.title }}</a></li>
 
   {% endfor %}
-  <ul>
+  </ul>
   {% if not_active_questions %}Вопросы по которым вы уже проголосовали:<br /><br />{% endif %}
   <ul>
   {% for question in not_active_questions %}

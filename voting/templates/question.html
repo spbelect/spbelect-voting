@@ -1,0 +1,78 @@
+{% extends 'layout.html' %}
+
+{% block head_scripts %}{{ block.super }}
+<script type="text/javascript">
+  {% if question.type_id == 1 %}
+  $(document).ready(function() {
+    $('input[name=answer]').removeAttr('checked');
+
+    $('#question-form').submit(function(event) {
+      if ($('input[name=answer]:checked').length != 1) {
+        window.alert('Необходимо отметить один вариант');
+        event.preventDefault();
+      }
+    });
+  });
+  {% elif question.type_id == 2 and question.max_replies_number %}
+  $(document).ready(function() {
+    if ($('input[name=answer]:checked').length == {{ question.max_replies_number}}) {
+      $('input[name=answer]:not(:checked)').attr('disabled', 'disabled');
+    }
+  });
+
+  $(document).on('click', 'input[name=answer]', function() {
+    if ($('input[name=answer]:checked').length == {{ question.max_replies_number}}) {
+      $('input[name=answer]:not(:checked)').attr('disabled', 'disabled');
+    } else {
+      $('input[name=answer]:not(:checked)').removeAttr('disabled');
+    }
+  });
+  {% endif %}
+</script>
+{% endblock head_scripts %}
+
+{% block content %}
+<div class="wrapper">
+  <b>{{ question.title }}</b><br /><br />
+
+  {{ question.text }}<br /><br />
+
+  {% if question.type_id == 1 %}
+    Выберите один вариант
+  {% elif question.type_id == 2 %}
+    {% if question.max_replies_number %}
+        Максимальное количество отметок {{ question.max_replies_number }}
+    {% else %}
+
+    {% endif %}
+  {% endif %}
+
+  <br /><br />
+
+  <form action="/answer/{{ question.id }}" method="post" id="question-form">
+  <table cellpadding="10px" width="100%">
+  {% for answer in answers %}
+    <tr>
+      <td width="50px">
+        {% if question.type_id == 1 %}
+        <input id="id_answers_{{ answer.id }}" type="radio" value="{{ answer.id }}" name="answer" />
+        {% elif question.type_id == 2 %}
+        <input id="id_answers_{{ answer.id }}" type="checkbox" value="{{ answer.id }}" name="answer" />
+        {% endif %}
+      </td>
+      <td width="140px">{% if answer.photo %}<img src="{{ answer.photo.url }}" width="128px" />{% endif %}</td>
+
+      <td>
+        <b>{{ answer.title }}</b><br /><br />
+        {{ answer.text|safe }}
+      </td>
+    </tr>
+    <tr><td colspan="3"><hr /></td></tr>
+  {% endfor %}
+  </table>
+  {% csrf_token %}
+  <br /><br />
+  <input type="submit" value="Проголосовать"/>
+  </form>
+</div>
+{% endblock content %}

@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from polling.models import Question, Answer
+from voting.models import QuestionType, Question, Answer
 from django.contrib import admin
+
+class QuestionTypeAdmin(admin.ModelAdmin):
+    model = QuestionType
+
+admin.site.register(QuestionType, QuestionTypeAdmin)
 
 class AnswerInline(admin.TabularInline):
     model = Answer

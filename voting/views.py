@@ -14,11 +14,12 @@ from django.contrib.auth.models import User
 from django.db.models import Count
 
 from models import *
-from forms import AnswerForm
+from forms import AnswerForm, QUESTION_FORMS
 
 @login_required()
 def index(request):
-    return TemplateResponse(request, 'index.html', locals())
+    return redirect('/question-list')
+    #return TemplateResponse(request, 'index.html', locals())
 
 @login_required()
 def question_list(request):
@@ -32,7 +33,7 @@ def question_list(request):
 @login_required()
 def question(request, id=None):
     if UserReply.objects.filter(user=request.user, question_id=id).exists():
-        return redirect('polling.views.question_list')
+        return redirect('voting.views.question_list')
 
     question = Question.objects.get(id=id)
     answers = question.answers.order_by('title').all()
@@ -45,26 +46,37 @@ def question(request, id=None):
 @transaction.commit_on_success
 def answer(request, id=None):
     if request.method != 'POST':
-        return redirect('polling.views.question_list')
+        return redirect('voting.views.question_list')
 
     if UserReply.objects.filter(user=request.user, question_id=id).exists():
-        return redirect('polling.views.question_list')
+        return redirect('voting.views.question_list')
 
-    form = AnswerForm(request.POST, question_id=id)
+    question = Question.objects.get(id=id)
 
-    if form.is_valid() and len(form.cleaned_data['answers']) <= 7:
-        UserReply.objects.create(user=request.user, question_id=id)
+    form = QUESTION_FORMS[question.type_id](request.POST, question_id=id)
+
+    if form.is_valid() and len(form.cleaned_data['answer']) <= 7:
+        ur_key = hashlib.sha1(str(datetime.datetime.now()) + str(request.user.id) + str(random.random())).hexdigest()
+        UserReply.objects.create(key=ur_key, user=request.user, question_id=id)
 
         key = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(6))
         reply = Reply.objects.create(key=key, question_id=id)
 
-        for answer_id in form.cleaned_data['answers']:
+        if question.type_id == QUESTION_SA:
             rd_key = hashlib.sha1(str(datetime.datetime.now()) + key).hexdigest()
             ReplyData.objects.create(
                 key=rd_key,
                 reply=reply,
-                answer_id=answer_id
+                answer_id=form.cleaned_data['answer']
             )
+        elif question.type_id == QUESTION_MA:
+            for answer_id in form.cleaned_data['answer']:
+                rd_key = hashlib.sha1(str(datetime.datetime.now()) + key).hexdigest()
+                ReplyData.objects.create(
+                    key=rd_key,
+                    reply=reply,
+                    answer_id=answer_id
+                )
 
         success = True
     else:

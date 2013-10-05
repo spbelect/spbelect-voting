@@ -9,8 +9,8 @@ from django.conf import settings
 
 urlpatterns = patterns('',
     # Examples:
-    # url(r'^$', 'se_polling.views.home', name='home'),
-    # url(r'^se_polling/', include('se_polling.foo.urls')),
+    # url(r'^$', 'spbelect_voting.views.home', name='home'),
+    # url(r'^spbelect_voting/', include('spbelect_voting.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
@@ -27,13 +27,13 @@ urlpatterns += patterns('account.views',
     (r'^change-password$', 'change_password'),
 )
 
-urlpatterns += patterns('polling.views',
+urlpatterns += patterns('voting.views',
     (r'^index/$|^$', 'index'),
-    #(r'^question-list/$', 'question_list'),
-    #(r'^question/(?P<id>\d+)$', 'question'),
-    #(r'^answer/(?P<id>\d+)$', 'answer'),
+    (r'^question-list/$', 'question_list'),
+    (r'^question/(?P<id>\d+)$', 'question'),
+    (r'^answer/(?P<id>\d+)$', 'answer'),
     (r'^voters/$', 'voters'),
-    (r'^replies/$', 'replies'),
+    #(r'^replies/$', 'replies'),
 )
 
 if settings.DEBUG:
