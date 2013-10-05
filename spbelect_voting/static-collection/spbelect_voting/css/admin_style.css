@@ -1,0 +1,38 @@
+#header {
+  background-color: #c4c8d0;
+  color: #737373;
+}
+
+#branding {
+  overflow: hidden;
+}
+
+#branding #site-name {
+  color: #737373;
+  margin-left: 200px;
+  font-size: 20px;
+  font-weight: bold;
+  top: 10px;
+  position: relative;
+}
+
+.page-title {
+  color:#737373;
+  font-size:15px;
+  font-weight:bold;
+  height:20px;
+  margin-left:200px;
+  position:relative;
+  top:15px;
+}
+
+#user-tools {
+  top: 60px;
+}
+
+.head-logo {
+  background: url("../images/logo.png") no-repeat scroll 47px 10px #c4c8d0;
+  height: 100px;
+  width: 203px;
+  float: left;
+}
