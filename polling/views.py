@@ -16,6 +16,7 @@ from django.db.models import Count
 from models import *
 from forms import AnswerForm
 
+@login_required()
 def index(request):
     return TemplateResponse(request, 'index.html', locals())
 
