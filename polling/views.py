@@ -20,6 +20,7 @@ from forms import AnswerForm
 def index(request):
     return TemplateResponse(request, 'index.html', locals())
 
+
 @login_required()
 def question_list(request):
     title = u'Вопросы для голосования'
