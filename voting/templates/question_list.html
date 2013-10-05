@@ -2,21 +2,14 @@
 
 {% block content %}
 <div class="wrapper">
-  {% if active_questions %}Вопросы, по которым предлагается проголосовать:<br /><br />{% endif %}
-  <ul>
+  {% if active_questions %}<h4>Вопросы, по которым предлагается проголосовать:</h4>{% endif %}
   {% for question in active_questions %}
-
-  <li><a href="/question/{{ question.id }}">{{ question.title }}</a><br /><br /></li>
-
+  <a href="/question/{{ question.id }}">{{ question.id }}. {{ question.title }}</a><br /><br />
   {% endfor %}
-  </ul>
-  {% if not_active_questions %}Вопросы по которым вы уже проголосовали:<br /><br />{% endif %}
-  <ul>
+
+  {% if not_active_questions %}<h4>Вопросы по которым вы уже проголосовали:</h4>{% endif %}
   {% for question in not_active_questions %}
-
-  <li>{{ question.title }}</li>
-
+  {{ question.id }}. {{ question.title }}<br /><br />
   {% endfor %}
-  </ul>
 </div>
 {% endblock content %}
