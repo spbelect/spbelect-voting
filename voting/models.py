@@ -71,6 +71,7 @@ class UserReply(models.Model):
 class Reply(models.Model):
     key = models.TextField(primary_key=True)
     question = models.ForeignKey(Question, db_column='question_id')
+    id_key = models.TextField()
 
 class ReplyData(models.Model):
     key = models.TextField(primary_key=True)

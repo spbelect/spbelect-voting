@@ -12,6 +12,7 @@ from django.db import transaction
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
 from django.db.models import Count
+from django.conf import settings
 
 from models import *
 from forms import AnswerForm, QUESTION_FORMS
@@ -55,25 +56,32 @@ def answer(request, id=None):
 
     form = QUESTION_FORMS[question.type_id](request.POST, question_id=id)
 
+    key = request.COOKIES.get('key', None)
+
     if form.is_valid() and len(form.cleaned_data['answer']) <= 7:
         ur_key = hashlib.sha1(str(datetime.datetime.now()) + str(request.user.id) + str(random.random())).hexdigest()
         UserReply.objects.create(key=ur_key, user=request.user, question_id=id)
 
-        key = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(6))
-        reply = Reply.objects.create(key=key, question_id=id)
+        if not key:
+            key = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(6))
+
+        reply = Reply.objects.create(
+            key=hashlib.sha1(str(datetime.datetime.now()) + str(id) + key).hexdigest(),
+            question_id=id,
+            id_key=key
+        )
 
         if question.type_id == QUESTION_SA:
-            rd_key = hashlib.sha1(str(datetime.datetime.now()) + key).hexdigest()
+
             ReplyData.objects.create(
-                key=rd_key,
+                key=hashlib.sha1(str(datetime.datetime.now()) + key).hexdigest(),
                 reply=reply,
                 answer_id=form.cleaned_data['answer']
             )
         elif question.type_id == QUESTION_MA:
             for answer_id in form.cleaned_data['answer']:
-                rd_key = hashlib.sha1(str(datetime.datetime.now()) + key).hexdigest()
                 ReplyData.objects.create(
-                    key=rd_key,
+                    key=hashlib.sha1(str(datetime.datetime.now()) + key).hexdigest(),
                     reply=reply,
                     answer_id=answer_id
                 )
@@ -82,7 +90,13 @@ def answer(request, id=None):
     else:
         success = False
 
-    return TemplateResponse(request, 'answer.html', locals())
+    response  = TemplateResponse(request, 'answer.html', locals())
+
+    if key:
+        response.set_cookie('key', key, expires=datetime.datetime.now() + datetime.timedelta(days=3),
+            httponly=True, secure=settings.SESSION_COOKIE_SECURE)
+
+    return response
 
 @login_required()
 def voters(request):
