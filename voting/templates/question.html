@@ -43,7 +43,7 @@
     {% if question.max_replies_number %}
         Максимальное количество отметок {{ question.max_replies_number }}
     {% else %}
-
+        Максимальное количество отметок {{ answers|length }}
     {% endif %}
   {% endif %}
 
