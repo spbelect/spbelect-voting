@@ -58,7 +58,7 @@ def answer(request, id=None):
 
     key = request.COOKIES.get('key', None)
 
-    if form.is_valid() and len(form.cleaned_data['answer']) <= 7:
+    if form.is_valid():
         ur_key = hashlib.sha1(str(datetime.datetime.now()) + str(request.user.id) + str(random.random())).hexdigest()
         UserReply.objects.create(key=ur_key, user=request.user, question_id=id)
 
@@ -72,7 +72,6 @@ def answer(request, id=None):
         )
 
         if question.type_id == QUESTION_SA:
-
             ReplyData.objects.create(
                 key=hashlib.sha1(str(datetime.datetime.now()) + key).hexdigest(),
                 reply=reply,
@@ -101,7 +100,8 @@ def answer(request, id=None):
 @login_required()
 def voters(request):
     title = u'Список проголосовавших'
-    voters = User.objects.filter(user_replies__isnull=False).order_by('first_name', 'last_name')
+    voters = User.objects.filter(user_replies__isnull=False).distinct().order_by('first_name', 'last_name')
+    not_voting = User.objects.filter(user_replies__isnull=True).distinct().order_by('first_name', 'last_name')
 
     members = User.objects.count()
 

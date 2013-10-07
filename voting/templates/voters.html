@@ -17,6 +17,20 @@
 
 <br /><br />
 
+<b>Не голосовали:</b>
+
+<ul>
+{% for voter in not_voting %}
+
+<li>{{ voter.first_name }} {{ voter.last_name }}</li>
+
+{% empty %}
+Нет
+{% endfor %}
+</ul>
+
+<br /><br />
+
 <b>Проголосовало:</b> {{ voters|length }} из {{ members }}, <b>явка:</b> {{ presence|floatformat:2 }}%
 
 </div>
