@@ -16,9 +16,7 @@ from django.contrib.auth.models import User
 fields = (
     'last_name',
     'first_name',
-    'second_name',
     'email',
-    'phone',
 )
 
 class Command(BaseCommand):
@@ -27,7 +25,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         reader = csv.DictReader(open(args[0], 'rb'), fields)
-        
+
         csvfile = open('new_' + args[0], 'wb')
         writer = csv.writer(csvfile)
 
@@ -50,11 +48,10 @@ class Command(BaseCommand):
             user.set_password(password)
             user.save()
 
-            new_row = [row['last_name'], row['first_name'], row['second_name'], row['email'], row['phone'], login, password]
+            new_row = [row['last_name'], row['first_name'], row['email'], login, password]
 
             new_row = [s.encode('UTF-8') for s in new_row]
 
             writer.writerow(new_row)
-            
+
         csvfile.close()
-            
