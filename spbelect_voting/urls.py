@@ -1,5 +1,6 @@
 from django.conf.urls import patterns, include, url
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from django.views.generic.base import RedirectView, TemplateView
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -28,10 +29,14 @@ urlpatterns += patterns('account.views',
 )
 
 urlpatterns += patterns('voting.views',
-    (r'^index/$|^$', 'index'),
-    (r'^question-list/$', 'question_list'),
-    (r'^question/(?P<id>\d+)$', 'question'),
-    (r'^answer/(?P<id>\d+)$', 'answer'),
+    #(r'^index/$|^$', 'index'),
+    (r'^index/$|^$', TemplateView.as_view(template_name='voting_stopped.html')),
+    #(r'^question-list/$', 'question_list'),
+    (r'^question-list/$', RedirectView.as_view(url='/', permanent=False)),
+    #(r'^question/(?P<id>\d+)$', 'question'),
+    (r'^question/(?P<id>\d+)$', RedirectView.as_view(url='/', permanent=False)),
+    #(r'^answer/(?P<id>\d+)$', 'answer'),
+    (r'^answer/(?P<id>\d+)$', RedirectView.as_view(url='/', permanent=False)),
     (r'^voters/$', 'voters'),
     #(r'^replies/$', 'replies'),
 )
