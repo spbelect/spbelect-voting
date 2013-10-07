@@ -73,6 +73,9 @@ class Reply(models.Model):
     question = models.ForeignKey(Question, db_column='question_id')
     id_key = models.TextField()
 
+    class Meta:
+        unique_together = (('question', 'id_key'),)
+
 class ReplyData(models.Model):
     key = models.TextField(primary_key=True)
     reply = models.ForeignKey(Reply, related_name='reply_data', db_column='reply_key')
@@ -80,3 +83,4 @@ class ReplyData(models.Model):
 
     class Meta:
         db_table = 'voting_reply_data'
+        unique_together = (('reply', 'answer'),)
