@@ -1,0 +1,11 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="wrapper">
+
+  <a href="{% url voting.views.replies 1 %}">Результаты голосования</a>
+  <br /><br />
+  <a href="{% url voting.views.voters %}">Проголосовавшие</a>
+
+</div>
+{% endblock content %}
