@@ -38,7 +38,8 @@ urlpatterns += patterns('voting.views',
     #(r'^answer/(?P<id>\d+)$', 'answer'),
     (r'^answer/(?P<id>\d+)$', RedirectView.as_view(url='/', permanent=False)),
     (r'^voters/$', 'voters'),
-    #(r'^replies/$', 'replies'),
+    (r'^replies/$', RedirectView.as_view(url='/replies/1', permanent=False)),
+    (r'^replies/(?P<id>\d+)$', 'replies'),
 )
 
 if settings.DEBUG:

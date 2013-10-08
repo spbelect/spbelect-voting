@@ -44,6 +44,8 @@
         <div class="title"><a href="">Конференция Наблюдателей Петербурга</a></div>
         <div class="page-title">{{ title }}</div>
         <ul class="menu">
+          <li><a href="{% url voting.views.replies 1 %}">Результаты голосования</a></li>
+          <li><a href="{% url voting.views.voters %}">Проголосовавшие</a></li>
           <li><a href="{% url account.views.change_password %}">Изменение пароля</a></li>
           <li><a href="{% url account.views.logout %}">
             Выход

@@ -1,7 +1,42 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-<div style="margin-bottom: 70px; margin-top: 20px; margin-left: 10px;">
+<div style="margin-bottom: 70px; margin-top: 20px; margin-left: 25px; margin-right: 25px;">
+  Вопросы:
+  {% for question in questions %}
+    <a href="{% url voting.views.replies question.id %}" title="{{ question.title }}">{{ question.id }}</a>
+  {% if not forloop.last %} | {% endif %}
+  {% endfor %}
+  <br /><br />
+  <hr />
+  <br />
+
+  <b>{{ question.title }}</b><br /><br />
+
+  {{ question.text|safe }}<br /><br />
+
+  {% if question.type_id == 1 %}
+    Варианты ответов: За, Против<br /><br />
+
+    Максимальное количество отметок: 1
+  {% elif question.type_id == 2 %}
+    Варианты ответов:
+    {% for answer in answers %}
+      {{ answer.title }}{% if not forloop.last %}, {% endif %}
+    {% endfor %}
+    <br /><br />
+
+    {% if question.max_replies_number %}
+        Максимальное количество отметок: {{ question.max_replies_number }}
+    {% else %}
+        Максимальное количество отметок: {{ answers|length }}
+    {% endif %}
+  {% endif %}
+
+  <br /><br />
+  <hr />
+  <br />
+
 <table class="replies">
   <tr>
     <th colspan="12">Бюллетени</th>
@@ -14,7 +49,7 @@
   </tr>
   {% for reply in replies %}
   <tr>
-    <td>{{ reply.key }}</td>
+    <td>{{ reply.id_key }}</td>
     {% for answer in answers %}
     <td>
       {% for reply_data in reply.reply_data.all %}
@@ -47,12 +82,12 @@
     <th colspan="2">Итоговый протокол</th>
   </tr>
   <tr>
-    <th>Кандидат</th>
-    <th>Голоса</th>
+    <th>Вариант ответа</th>
+    <th>Голосов</th>
   </tr>
 
   {% for answer in ordered_answers %}
-  <tr {% if forloop.counter <= 7 %}style="color:red;"{% endif %}>
+  <tr {% if forloop.counter <= question.max_replies_number %}style="color:red;"{% endif %}>
     <td>{{ answer.title }}</td>
     <td>{{ answer.replies }}</td>
   </tr>

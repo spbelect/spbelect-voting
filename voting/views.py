@@ -110,12 +110,17 @@ def voters(request):
     return TemplateResponse(request, 'voters.html', locals())
 
 @login_required()
-def replies(request):
-    title = u'Итоги голосования за кандидатов в совет Наблюдателей Петербурга'
-    answers = Answer.objects.order_by('title').annotate(replies=Count('reply_data'))
+def replies(request, id=None):
+    title = u'Итоги голосования'
 
-    ordered_answers = Answer.objects.annotate(replies=Count('reply_data')).order_by('-replies')
+    questions = Question.objects.all()
 
-    replies = Reply.objects.prefetch_related('reply_data').order_by('key')
+    question = Question.objects.get(id=id)
+
+    answers = Answer.objects.filter(question_id=id).order_by('title').annotate(replies=Count('reply_data'))
+
+    ordered_answers = Answer.objects.filter(question_id=id).annotate(replies=Count('reply_data')).order_by('-replies')
+
+    replies = Reply.objects.filter(question_id=id).prefetch_related('reply_data').order_by('key')
 
     return TemplateResponse(request, 'replies.html', locals())
