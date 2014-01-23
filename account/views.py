@@ -7,6 +7,7 @@ from django.template.response import TemplateResponse
 from forms import ChangePasswordForm
 from forms import LoginForm
 
+
 #@failed_login_rate()
 @user_passes_test(lambda user: not user.is_authenticated(), '/account/logout')
 def login(request):
@@ -14,8 +15,8 @@ def login(request):
         login_form = LoginForm(request.POST)
         if login_form.is_valid():
             login_data = login_form.cleaned_data
-            user = auth.authenticate(username = login_data['username'],
-                password = login_data['password'])
+            user = auth.authenticate(username=login_data['username'],
+                                     password=login_data['password'])
             if user is not None and user.is_active:
                 auth.login(request, user)
                 if login_data['next']:
@@ -33,11 +34,13 @@ def login(request):
 
     return TemplateResponse(request, 'login.html', locals())
 
+
 @login_required
 def logout(request):
     auth.logout(request)
 
     return redirect('account.views.login')
+
 
 @login_required
 def change_password(request):

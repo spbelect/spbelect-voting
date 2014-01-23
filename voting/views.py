@@ -17,19 +17,25 @@ from django.conf import settings
 from models import *
 from forms import AnswerForm, QUESTION_FORMS
 
+
 @login_required()
 def index(request):
     return redirect('/question-list')
     #return TemplateResponse(request, 'index.html', locals())
 
+
 @login_required()
 def question_list(request):
     title = u'Вопросы для голосования'
 
-    active_questions = Question.objects.exclude(user_replies__user=request.user).distinct('id')
-    not_active_questions = Question.objects.filter(user_replies__user=request.user).distinct('id')
+    active_questions = \
+        Question.objects.exclude(user_replies__user=request.user) \
+        .distinct('id')
+    not_active_questions = \
+        Question.objects.filter(user_replies__user=request.user).distinct('id')
 
     return TemplateResponse(request, 'question_list.html', locals())
+
 
 @login_required()
 def question(request, id=None):
@@ -42,6 +48,7 @@ def question(request, id=None):
     title = question.title
 
     return TemplateResponse(request, 'question.html', locals())
+
 
 @login_required()
 @transaction.commit_on_success
@@ -59,28 +66,34 @@ def answer(request, id=None):
     key = request.COOKIES.get('key', None)
 
     if form.is_valid():
-        ur_key = hashlib.sha1(str(datetime.datetime.now()) + str(request.user.id) + str(random.random())).hexdigest()
+        ur_key = hashlib.sha1(str(datetime.datetime.now()) +
+                              str(request.user.id) +
+                              str(random.random())).hexdigest()
         UserReply.objects.create(key=ur_key, user=request.user, question_id=id)
 
         if not key:
-            key = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(6))
+            key = ''.join(random.choice(string.ascii_uppercase +
+                                        string.digits) for x in range(6))
 
         reply = Reply.objects.create(
-            key=hashlib.sha1(str(datetime.datetime.now()) + str(id) + key).hexdigest(),
+            key=hashlib.sha1(str(datetime.datetime.now()) + str(id) +
+                             key).hexdigest(),
             question_id=id,
             id_key=key
         )
 
         if question.type_id == QUESTION_SA:
             ReplyData.objects.create(
-                key=hashlib.sha1(str(datetime.datetime.now()) + key).hexdigest(),
+                key=hashlib.sha1(str(datetime.datetime.now()) +
+                                 key).hexdigest(),
                 reply=reply,
                 answer_id=form.cleaned_data['answer']
             )
         elif question.type_id == QUESTION_MA:
             for answer_id in form.cleaned_data['answer']:
                 ReplyData.objects.create(
-                    key=hashlib.sha1(str(datetime.datetime.now()) + key).hexdigest(),
+                    key=hashlib.sha1(str(datetime.datetime.now()) +
+                                     key).hexdigest(),
                     reply=reply,
                     answer_id=answer_id
                 )
@@ -89,25 +102,30 @@ def answer(request, id=None):
     else:
         success = False
 
-    response  = TemplateResponse(request, 'answer.html', locals())
+    response = TemplateResponse(request, 'answer.html', locals())
 
     if key:
-        response.set_cookie('key', key, expires=datetime.datetime.now() + datetime.timedelta(days=3),
-            httponly=True, secure=settings.SESSION_COOKIE_SECURE)
+        response.set_cookie('key', key, expires=datetime.datetime.now() +
+                            datetime.timedelta(days=3), httponly=True,
+                            secure=settings.SESSION_COOKIE_SECURE)
 
     return response
+
 
 @login_required()
 def voters(request):
     title = u'Список проголосовавших'
-    voters = User.objects.filter(user_replies__isnull=False).distinct().order_by('first_name', 'last_name')
-    not_voting = User.objects.filter(user_replies__isnull=True).distinct().order_by('first_name', 'last_name')
+    voters = User.objects.filter(user_replies__isnull=False) \
+        .distinct().order_by('first_name', 'last_name')
+    not_voting = User.objects.filter(user_replies__isnull=True) \
+        .distinct().order_by('first_name', 'last_name')
 
     members = User.objects.count()
 
     presence = float(len(voters))/members * 100
 
     return TemplateResponse(request, 'voters.html', locals())
+
 
 @login_required()
 def replies(request, id=None):
@@ -117,10 +135,13 @@ def replies(request, id=None):
 
     question = Question.objects.get(id=id)
 
-    answers = Answer.objects.filter(question_id=id).order_by('title').annotate(replies=Count('reply_data'))
+    answers = Answer.objects.filter(question_id=id).order_by('title') \
+        .annotate(replies=Count('reply_data'))
 
-    ordered_answers = Answer.objects.filter(question_id=id).annotate(replies=Count('reply_data')).order_by('-replies')
+    ordered_answers = Answer.objects.filter(question_id=id) \
+        .annotate(replies=Count('reply_data')).order_by('-replies')
 
-    replies = Reply.objects.filter(question_id=id).prefetch_related('reply_data').order_by('key')
+    replies = Reply.objects.filter(question_id=id) \
+        .prefetch_related('reply_data').order_by('key')
 
     return TemplateResponse(request, 'replies.html', locals())

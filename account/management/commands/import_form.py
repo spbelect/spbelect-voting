@@ -19,6 +19,7 @@ fields = (
     'email',
 )
 
+
 class Command(BaseCommand):
     args = '<file.csv>'
     help = 'Import form data from csv file'
@@ -36,8 +37,10 @@ class Command(BaseCommand):
                 if isinstance(row[key], basestring):
                     row[key] = row[key].strip()
 
-            login = ''.join(random.choice(string.ascii_lowercase + string.digits) for x in range(6))
-            password = ''.join(random.choice(string.ascii_lowercase + string.digits) for x in range(6))
+            login = ''.join(random.choice(string.ascii_lowercase
+                                          + string.digits) for x in range(6))
+            password = ''.join(random.choice(string.ascii_lowercase +
+                                             string.digits) for x in range(6))
 
             user = User(
                 username=login,
@@ -48,7 +51,8 @@ class Command(BaseCommand):
             user.set_password(password)
             user.save()
 
-            new_row = [row['last_name'], row['first_name'], row['email'], login, password]
+            new_row = [row['last_name'], row['first_name'], row['email'],
+                       login, password]
 
             new_row = [s.encode('UTF-8') for s in new_row]
 
